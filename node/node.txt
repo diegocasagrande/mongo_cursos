@@ -1,0 +1,11 @@
+
+
+
+Conections string:
+mongodb+srv://m220student:m220password@mflix-heg15.gcp.mongodb.net/test?retryWrites=true
+
+
+mongorestore --drop --gzip --uri \
+  "mongodb+srv://m220student:m220password@mflix-heg15.gcp.mongodb.net" data
+
+

@@ -1,0 +1,68 @@
+mongod --config ~/mongoConfig.yaml 
+
+mongod --port 27000 --dbpath /data/db --bind_ip "127.0.0.1,192.168.103.100"  --auth
+
+storage:
+  dbPath: "/data/db"
+net:
+  bindIp : "127.0.0.1,192.168.103.100"
+  port : 27000
+setParameter:
+   enableLocalhostAuthBypass: false
+
+mongo --host localhost:27000
+
+db.createUser({
+    user: "m103-admin",
+    pwd: "m103-pass",
+    roles: [
+      {role: "root", db: "admin"}
+    ]
+  })
+
+
+
+mongo admin -u root -p root123
+
+db.createUser(
+  { user: "security_officer",
+    pwd: "h3ll0th3r3",
+    roles: [ { db: "admin", role: "userAdmin" } ]
+  }
+
+db.createUser(
+  { user: "dba",
+    pwd: "c1lynd3rs",
+    roles: [ { db: "admin", role: "dbAdmin" } ]
+  }
+)
+
+db.createUser(
+  { user: "m103-application-user",
+    pwd: "m103-application-pass",
+    roles: [ {db: "applicationData", role: "readWrite"}]   
+  }
+)
+
+db.grantRolesToUser( "m103-application-user",  [ { db: "applicationData", role: "readWrite"  } ] )
+)
+
+db.runCommand( { rolesInfo: { role: "dbOwner", db: "playground" }, showPrivileges: true} )
+
+
+
+
+
+
+mongo admin  --host localhost:27000 -u m103-admin -p m103-pass --eval '
+  db.createUser({
+   user: "m103-application-user",
+  pwd: "m103-application-pass",
+  roles: [
+   {role: "readWrite", db: "applicationData"}
+  ]
+})
+
+
+
+mongoimport  --host localhost:27000 -u m103-application-user -p m103-application-pass -d applicationData /dataset/products.json

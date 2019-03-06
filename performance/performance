@@ -1,0 +1,13 @@
+* importar para db e colection:
+mongoimport --host localhost:27017 --db m201 --collection people  people.json
+
+* contar a quantidade de registros com a propriedade email:
+db.people.count({ "email" : {"$exists": 1} })
+
+* ideal um diretorio por db e um para indices
+mongod --dbpath /data/db --fork --logpath /data/db/mongodb.log \
+       --directoryperdb --wiredTigerDirectoryForIndexes
+mais no arquivo: m201/how_data_is_stored_on_disk.sh
+
+
+

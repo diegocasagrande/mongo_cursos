@@ -1,0 +1,298 @@
+mongod --config ~/mongoConfig.yaml 
+
+mongod --port 27000 --dbpath /data/db --bind_ip "127.0.0.1,192.168.103.100"  --auth
+
+storage:
+  dbPath: "/data/db"
+net:
+  bindIp : "127.0.0.1,192.168.103.100"
+  port : 27000
+setParameter:
+   enableLocalhostAuthBypass: false
+
+mongo --host localhost:27000
+
+db.createUser({
+    user: "m103-admin",
+    pwd: "m103-pass",
+    roles: [
+      {role: "root", db: "admin"}
+    ]
+  })
+
+
+
+mongo admin -u root -p root123
+
+db.createUser(
+  { user: "security_officer",
+    pwd: "h3ll0th3r3",
+    roles: [ { db: "admin", role: "userAdmin" } ]
+  }
+
+db.createUser(
+  { user: "dba",
+    pwd: "c1lynd3rs",
+    roles: [ { db: "admin", role: "dbAdmin" } ]
+  }
+)
+
+db.createUser(
+  { user: "m103-application-user",
+    pwd: "m103-application-pass",
+    roles: [ {db: "applicationData", role: "readWrite"}]   
+  }
+)
+
+db.grantRolesToUser( "m103-application-user",  [ { db: "applicationData", role: "readWrite"  } ] )
+)
+
+db.runCommand( { rolesInfo: { role: "dbOwner", db: "playground" }, showPrivileges: true} )
+
+
+
+
+
+
+mongo admin  --host localhost:27000 -u m103-admin -p m103-pass --eval '
+  db.createUser({
+   user: "m103-application-user",
+  pwd: "m103-application-pass",
+  roles: [
+   {role: "readWrite", db: "applicationData"}
+  ]
+})
+
+
+
+mongoimport  --host localhost:27000 -u m103-application-user -p m103-application-pass -d applicationData /dataset/products.json
+
+
+
+****** mongoConfo.yaml
+storage:
+  dbPath: "/var/mongodb/db"   
+net:
+  bindIp : "127.0.0.1,192.168.103.100"
+  port : 27000
+setParameter:
+   enableLocalhostAuthBypass: false
+systemLog:
+  destination: 'file' 
+  path: '/var/mongodb/db/mongod.log' 
+  logAppend: true
+operationProfiling:
+  mode: 'slowOp'
+  slowOpThresholdMs: 50
+
+
+1. Criar o arquivo de chaves:
+sudo mkdir -p /var/mongodb/pki
+sudo chown vagrant:vagrant -R /var/mongodb
+openssl rand -base64 741 > /var/mongodb/pki/m103-keyfile
+chmod 600 /var/mongodb/pki/m103-keyfile
+
+2. Criar os 3 arquivos e inicialização dos mongo
+
+*** mongod-repl-1.conf
+storage:
+  dbPath: "/var/mongodb/db/1"   
+net:
+  bindIp : "127.0.0.1,192.168.103.100"
+  port : 27001
+setParameter:
+   enableLocalhostAuthBypass: false
+systemLog:
+  destination: 'file' 
+  path: '/var/mongodb/db/mongod1.log' 
+  logAppend: true
+operationProfiling:
+  mode: 'slowOp'
+  slowOpThresholdMs: 50
+replication:
+  replSetName: m103-repl
+security:
+  authorization: enabled
+  keyFile: '/var/mongodb/pki/m103-keyfile'
+processManagement:
+  fork: true
+
+*** mongod-repl-2.conf
+storage:
+  dbPath: "/var/mongodb/db/2"   
+net:
+  bindIp : "127.0.0.1,192.168.103.100"
+  port : 27002
+setParameter:
+   enableLocalhostAuthBypass: false
+systemLog:
+  destination: 'file' 
+  path: '/var/mongodb/db/mongod2.log' 
+  logAppend: true
+operationProfiling:
+  mode: 'slowOp'
+  slowOpThresholdMs: 50
+replication:
+  replSetName: m103-repl
+security:
+  authorization: enabled
+  keyFile: '/var/mongodb/pki/m103-keyfile'
+processManagement:
+  fork: true
+
+*** mongod-repl-3.conf
+storage:
+  dbPath: "/var/mongodb/db/3"   
+net:
+  bindIp : "127.0.0.1,192.168.103.100"
+  port : 27003
+setParameter:
+   enableLocalhostAuthBypass: false
+systemLog:
+  destination: 'file' 
+  path: '/var/mongodb/db/mongod3.log' 
+  logAppend: true
+operationProfiling:
+  mode: 'slowOp'
+  slowOpThresholdMs: 50
+replication:
+  replSetName: m103-repl
+security:
+  authorization: enabled
+  keyFile: '/var/mongodb/pki/m103-keyfile'
+processManagement:
+  fork: true
+
+3. criar os arquivos de log
+mkdir /var/mongodb/db/{1,2,3}
+
+4. start mongo:
+mongod -f mongod-repl-1.conf --auth
+
+5. logo no mongo:
+mongo --port 27011
+
+6. inicializa como replica set 
+rs.initiate()
+
+7. cria super user:
+use admin
+db.createUser({
+  user: "m103-admin",
+  pwd: "m103-pass",
+  roles: [
+    {role: "root", db: "admin"}
+  ]
+})
+
+8. loga como admin
+exit
+mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+
+9. verifica status 
+rs.status()
+
+10. inicializa demais replicas
+mongod -f mongod-repl-2.conf
+mongod -f mongod-repl-3.conf
+
+
+11. adiciona demais nos:
+rs.add("m103.mongodb.university:27012")
+rs.add("m103.mongodb.university:27013")
+
+
+12. verifica se é master
+rs.isMaster()
+
+	
+
+listar todos processos
+ps -edaf | grep mongo
+
+rs.status()
+rs.isMaster()
+db.serverStatus()['repl']
+rs.printReplicationInfo()
+
+
+
+use local
+show collections
+var stats = db.oplog.rs.stats()
+stats.capped
+stats.size
+stats.maxSize
+rs.printReplicationInfo()
+
+
+use m103
+for ( i=0; i< 100; i++) { db.messages.insert( { 'msg': 'not yet', _id: i } ) }
+db.messages.count()
+Querying the oplog to find all operations related to m103.messages:
+
+use local
+db.oplog.rs.find({"ns": "m103.messages"}).sort({$natural: -1})
+Illustrating that one update statement may generate many entries in the oplog:
+
+use m103
+db.messages.updateMany( {}, { $set: { author: 'norberto' } } )
+use local
+db.oplog.rs.find( { "ns": "m103.messages" } ).sort( { $natural: -1 } )
+
+
+
+reconfigurar um replica
+
+cfg = rs.conf()
+Setting the priority of a node to 0, so it cannot become primary (making the node "passive"):
+
+cfg.members[2].priority = 0
+Updating our replica set to use the new configuration cfg:
+
+rs.reconfig(cfg)
+
+
+db.getMongo().setReadPref('secondaryPreferred')
+db.getMongo().setReadPref('nearest')
+db.getMongo().setReadPref('primaryPreferred')
+db.getMongo().setReadPref('secondary')
+db.getMongo().setReadPref('primary')
+db.products.findOne()
+
+
+
+
+mkdir /var/mongodb/db/{4,5,6}
+
+
+storage:
+  dbPath: /var/mongodb/db/5
+  wiredTiger:
+     engineConfig:
+        cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27005
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/5/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+operationProfiling:
+  slowOpThresholdMs: 50
+replication:
+  replSetName: m103-repl-2
+sharding:
+  clusterRole: shardsvr
+
+
+
+
+
+
+validate_lab_document_chunks m103.products-sku_MinKey

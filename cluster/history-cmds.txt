@@ -1,0 +1,429 @@
+    1  ls
+    2  validate_box
+    3  mongod
+    4  mkdir first_mongod
+    5  mongod --port 30000 --dbpath first_mongod --logpath first_mongod/mongod.log --fork
+    6  mongo --port 30000
+    7  ls
+    8  mongo admin --host localhost:27000 --eval '
+    9    db.createUser({
+   10      user: "m103-admin",
+   11      pwd: "m103-pass",
+   12      roles: [
+   13        {role: "root", db: "admin"}
+   14      ]
+   15    })
+   16  '
+   17  mongo
+   18  ls
+   19  exit
+   20  mongo
+   21  mongo admin --host localhost:27000 --eval '
+   22    db.createUser({
+   23      user: "m103-admin",
+   24      pwd: "m103-pass",
+   25      roles: [
+   26        {role: "root", db: "admin"}
+   27      ]
+   28    })
+   29  '
+   30  mongo admin --host localhost:27017
+   31  validate_lab_launch_mongod
+   32  mongo admin --host localhost:27000 --eval '
+   33    db.createUser({
+   34      user: "m103-admin",
+   35      pwd: "m103-pass",
+   36      roles: [
+   37        {role: "root", db: "admin"}
+   38      ]
+   39    })
+   40  '
+   41  validate_lab_launch_mongod
+   42  use admin
+   43  db.createUser(
+   44  mongo admin --host localhost:27000 --eval '
+   45    db.createUser({
+   46      user: "m103-admin",
+   47      pwd: "m103-pass",
+   48      roles: [
+   49        {role: "root", db: "admin"}
+   50      ]
+   51    })
+   52  '
+   53  mongod --auth --port 27000 --dbpath /data/db1
+   54  ps -ef | grep mongo
+   55  kill -9 8507
+   56  mongod --auth --port 27000 --dbpath /data/db1
+   57  mongod --auth --port 27000 --dbpath /data/db
+   58  validate_lab_launch_mongod
+   59  vi 
+   60  mongod
+   61  mogod -port 27000
+   62  mongod --help
+   63  mongod --help | grep port
+   64  mogod --port 27000
+   65  mongod --port 27000
+   66  ps -ef | grep mongo
+   67  kill -9  6771
+   68  kill -9  8494
+   69  ls
+   70  ps -ef | grep mongo
+   71  mongod --help | authen
+   72  mongod --help | grep authen
+   73  mongod --help | grep fork
+   74  mongod --port 27000 --dbpath /data/db --bind_ip "127.0.0.1,192.168.103.100" 
+   75  validate_lab_launch_mongod
+   76  mongod --port 27000 --dbpath /data/db --bind_ip "127.0.0.1,192.168.103.100"  --auth
+   77  validate_lab_configuration_file
+   78  ls -l /data/db
+   79  ls -l /data/db/diagnostic.data
+   80  mongo admin --host localhost:27000
+   81  mongo --host localhost:27000
+   82  mongo --port 27000
+   83  mongo --host localhost:27000
+   84  mongo
+   85  mongo --host localhost:27000
+   86  mkdir /var/mongodb/db/
+   87  sudo mkdir /var/mongodb/db/
+   88  cd /var
+   89  ls
+   90  mkdir mongod
+   91  sudo mkdir mongod
+   92  cd mongod/
+   93  mkdir db
+   94  sudo mkdir db
+   95  chown vagrant:vagrant db/
+   96  sudo chown vagrant:vagrant db/
+   97  cd ..
+   98  sudo chown vagrant:vagrant mongod/
+   99  ls
+  100  ls -la
+  101  cd ; 
+  102  cd ~
+  103  ls
+  104  vi mongoConfig.yaml 
+  105  mongod --config ~/mongoConfig.yaml 
+  106  vi mongoConfig.yaml 
+  107  mongod --config ~/mongoConfig.yaml 
+  108  vi mongoConfig.yaml 
+  109  mongod --config ~/mongoConfig.yaml 
+  110  vi mongoConfig.yaml 
+  111  cd  
+  112  vi mongoConfig.yaml 
+  113  cd /var/mongodb/db/
+  114  ls
+  115  tail mongod.log
+  116  validate_lab_different_logpath
+  117  cat /etc/mongod.conf
+  118  validate_lab_first_application_user
+  119  db.grantRolesToUser( "m103-application-user",  [ { db: "applicationData", role: "readWrite"  } ] )
+  120  validate_lab_first_application_user
+  121  cd /dataset
+  122  ls
+  123  mongoimport  --host localhost:27000 -u m103-application-user -p m103-applicatio
+  124  mongoimport  --host localhost:27000 -u m103-application-user -p m103-application-pass -d applicationData /dataset/products.json
+  125  validate_lab_import_dataset
+  126  exit
+  127  vi mongoConfig.yaml
+  128  mongod -f mongoConfig.yaml 
+  129  mongod --config ~/mongoConfig.yaml 
+  130  vi mongoConfig.yaml 
+  131  mongod --config ~/mongoConfig.yaml 
+  132  cd /var/
+  133  sudo mkdir mongodb
+  134  sudo chown vagrant:vagrant mongodb/
+  135  cd mongodb
+  136  sudo mkdir db
+  137  sudo chown vagrant:vagrant db/
+  138  cd..
+  139  cd ..
+  140  rm -r mongod
+  141  sudo rm -r mongod
+  142  mongo --host localhost:27000
+  143  validate_lab_change_dbpath
+  144  mongo --host localhost:27000
+  145  validgrssh
+  146  cd  ~
+  147  vi mongoConfig.yaml 
+  148  mongod --config ~/mongoConfig.yaml 
+  149  mongod --config ~/mongoConfig.yaml --fork
+  150  mongo admin -u m103-admin -p m103-pass
+  151  mongo admin -u m103-admin -p m103-pass --port 27000
+  152  validate_lab_first_application_user
+  153  mongo admin -u m103-admin -p m103-pass --port 27000
+  154  mongo applicationData -u m103-application-user -p m103-application-pass --port 27000
+  155  mongo admin -u m103-application-user -p m103-application-pass --port 27000
+  156  mongo admin -u m103-admin -p m103-pass --port 27000
+  157  mongo admin -u m103-application-user -p m103-application-pass --port 27000
+  158  mongo applicationData -u m103-application-user -p m103-application-pass --port 27000
+  159  mongo admin -u m103-application-user -p m103-application-pass --port 27000
+  160  mongo admin -u m103-admin -p m103-pass --port 27000
+  161  mongo admin  --host localhost:27000 -u m103-admin -p m103-pass --eval '
+  162    db.createUser({
+  163     user: "m103-application-user",
+  164    pwd: "m103-application-pass",
+  165    roles: [
+  166     {role: "readWrite", db: "applicationData"}
+  167    ]
+  168  })
+  169  ;
+  170  ,
+  171  .
+  172  mongo admin  --host localhost:27000 -u m103-admin -p m103-pass --eval '
+  173    db.createUser({
+  174     user: "m103-application-user",
+  175    pwd: "m103-application-pass",
+  176    roles: [
+  177     {role: "readWrite", db: "applicationData"}
+  178    ]
+  179  });
+  180  mongo admin  --host localhost:27000 -u m103-admin -p m103-pass --eval '
+  181    db.createUser({
+  182     user: "m103-application-user",
+  183    pwd: "m103-application-pass",
+  184    roles: [
+  185     {role: "readWrite", db: "applicationData"}
+  186    ]
+  187  })  
+  188  mongo admin  --host localhost:27000 -u m103-admin -p m103-pass --eval '
+  189    db.createUser({
+  190     user: "m103-application-user",
+  191    pwd: "m103-application-pass",
+  192    roles: [
+  193     {role: "readWrite", db: "applicationData"}
+  194    ]
+  195  mongo admin -u m103-admin -p m103-pass --port 27000 
+  196  ls
+  197  sudo mkdir -p /var/mongodb/pki
+  198  sudo chown vagrant:vagrant -R /var/mongodb
+  199  openssl rand -base64 741 > /var/mongodb/pki/m103-keyfile
+  200  chmod 600 /var/mongodb/pki/m103-keyfile
+  201  ls
+  202  cd first_mongod/
+  203  ls
+  204  cd ..
+  205  ls
+  206  gedit mongoConfig.yaml 
+  207  vi mongoConfig.yaml 
+  208  ls
+  209  vi mongod-repl-1.conf
+  210  vi mongod-repl-2.conf
+  211  vi mongod-repl-3.conf
+  212  ls
+  213  mkdir /var/mongodb/db/{1,2,3}
+  214  ls
+  215  mongod -f mongod-repl-1.conf 
+  216  mongo --port 27001
+  217  mongo --host localhost:27001
+  218  mongo --port 27001
+  219  mongod ls
+  220  ls
+  221  mongo --port 27001
+  222  mongo --port 27001 
+  223  mongo --host localhost:27001
+  224  mongo stop mongod-repl-1
+  225  mongod stop mongod-repl-1
+  226  quit() ;
+  227  mongod
+  228  mongo --host localhost:27001
+  229  mongod -f mongod-repl-1.conf  --auth
+  230  ps -a | grep mongo
+  231  ps
+  232  ps -al
+  233  sudo service mongodb stop
+  234  sudo service mongod stop
+  235  sudo service mongo stop
+  236  ps
+  237  mongo
+  238  mongod -f mongod-repl-1.conf  --auth
+  239  mongod -f mongod-repl-1.conf  --auth --fork
+  240  mongod --port 27001
+  241  use admin
+  242  mongod -f mongod-repl-1.conf  --auth
+  243  sudo service stop mongo
+  244  sudo service mongo stop
+  245  sudo service mongod stop
+  246  sudo service mongodb stop
+  247  sudo /etc/init.d/mongodb stop
+  248  curl localhost:27001
+  249  curl localhost:2700
+  250  curl localhost:27000
+  251  mongod --port 27001
+  252  mongo --port 27001
+  253  ps -al
+  254  ps -a
+  255  pstree
+  256  pstree -a
+  257  pstree -al
+  258  kill mongod
+  259  ps -al
+  260  sudo ps -a
+  261  sudo service mongodb stop
+  262  sudo service mongo stop
+  263  sudo service mongod stop
+  264  sudo service mongos stop
+  265  sudo service `-25*[{mongod}] stop
+  266  ;
+  267  '
+  268  `
+  269  kill -9 27840
+  270  curl localhost:27001
+  271  mongod --port 27001
+  272  mongod -f mongod-repl-1.conf --auth
+  273  mongo --port 27001
+  274  mongodb status
+  275  mongod status
+  276  ps -edaf | grep mongo
+  277  mongo --host localhost:27001
+  278  ps -edaf | grep mongo
+  279  kill -9 28973
+  280  ps -edaf | grep mongo
+  281  vi mongod-repl-1.conf 
+  282  mongod -f mongod-repl-1.conf
+  283  mongo --host localhost:27001
+  284  ps -edaf | grep mongo
+  285  vi mongod-repl-1.conf 
+  286  mongod -f mongod-repl-1.conf
+  287  mongo --host "m103-example/192.168.103.100:27011" -u "m103-admin"
+  288  vi mongod-repl-1.conf mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"mmmkdkdklsls   adsfex;
+  289  e
+  290  mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  291  mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  292  mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"--authenticationDatabase "admin"sdfasdf
+  293  mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"asdasdf
+  294  asdf
+  295  root
+  296  --authenticationDatabase "admin"
+  297  as
+  298  ls
+  299  ps -edaf | grep mongo
+  300  mongo --host "m103-example/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  301  mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  302  mongod -f mongod-repl-1.conf
+  303  mongod -f mongod-repl-2.conf
+  304  mongod -f mongod-repl-3.conf
+  305  mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  306  validate_lab_initialize_local_replica_set
+  307  mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  308  ps -edaf | grep mongo
+  309  kill 29632
+  310  ps -edaf | grep mongo
+  311  mongod -f mongod-repl-3.conf 
+  312  mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  313  validate_lab_remove_readd_node
+  314  mongo --host "localhost:27002" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  315  mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  316  mongod -f mongod-repl-2.conf 
+  317  mongo --host "localhost:27002" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  318  mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  319  mongoimport --drop --host m103-repl/192.168.103.100:27002,192.168.103.100:27001,192.168.103.100:27003 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db applicationData --collection products /dataset/products.json
+  320  mongo --host "localhost:27002" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  321  mongo --host "localhost:27003" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  322  mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  323  mongo ps
+  324  exit
+  325  ls
+  326  cd dta
+  327  cd data 
+  328  ls
+  329  cd ..
+  330  vi mongoConfig.yaml 
+  331  vi mongod-repl-1.conf 
+  332  ls
+  333  mkdir /var/mongodb/db/csrs{1,2,3}
+  334  vi csrs-1.conf
+  335  vi csrs-2.conf
+  336  vi csrs-3.conf
+  337  mongod -f csrs_1.conf
+  338  mongod -f csrs_2.conf
+  339  mongod -f csrs-1.conf
+  340  vi csrs-1.conf 
+  341  mongod -f csrs-1.conf
+  342  mongod -f csrs-2.conf
+  343  vi csrs-2.conf 
+  344  mongod -f csrs-2.conf
+  345  mongod -f csrs-3.conf
+  346  vi csrs-3.conf 
+  347  mongod -f csrs-3.conf
+  348  mongo --port 26001
+  349  vi mongos.conf
+  350  mongos -f mongos.conf
+  351  ls
+  352  vi mongod-repl-1.conf 
+  353  vi mongod-repl-2.conf 
+  354  vi mongod-repl-3.conf 
+  355  mongo --port 27012 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  356  ps -edaf | grep mongo
+  357  mongod -f node2.conf
+  358  mongod -f mongod-repl-2.conf
+  359  mongod -f mongod-repl-3.conf
+  360  mongo --port 27011 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  361  mongo --port 27001 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  362  mongod -f mongod-repl-1.conf
+  363  mongo --port 27001 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  364  mongod -f mongod-repl-1.conf
+  365  mongos
+  366  mongos --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  367  mongo --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  368  validate_lab_first_sharded_cluster
+  369  vi mongod-repl-1.conf 
+  370  vi mongod-repl-2.conf 
+  371  vi mongod-repl-3.conf 
+  372  mongo --port 27001 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  373  mongod -f mongod-repl-1.conf
+  374  mongo --port 27003 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  375  mongod -f mongod-repl-3.conf
+  376  mongo --port 27002 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  377  mongod -f mongod-repl-2.conf
+  378  validate_lab_first_sharded_cluster
+  379  mkdir /var/mongodb/db/{4,5,6}
+  380  ls
+  381  vi mongod-repl-4.conf
+  382  vi mongod-repl-5.conf
+  383  vi mongod-repl-4.conf
+  384  vi mongod-repl-6.conf
+  385  mongod -f mongod-repl-4.conf
+  386  mongo --host localhost:27004
+  387  ps -ef
+  388  kill 7429
+  389  mongod -f mongod-repl-4.conf --auth
+  390  mongo --host localhost:27004
+  391  mongo --host "localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  392  mongo --host "localhost:27004" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  393  mongod -f mongod-repl-5.conf 
+  394  mongod -f mongod-repl-6.conf 
+  395  mongo --host "localhost:27004" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  396  mongos --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  397  mongo --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  398  mongoimport --drop /dataset/products.json --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db m103 --collection products
+  399  mongo --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  400  validate_lab_shard_collection
+  401  mongo --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  402  validate_lab_document_chunks m103.products-sku_MinKey
+  403  mongo --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+  404  ls
+  405  git init
+  406  ls -la
+  407  vi a.out
+  408  vi csrs-1.conf 
+  409  cat csrs-1.conf 
+  410  cat csrs-2.conf 
+  411  cat csrs-3.conf 
+  412  cat mongoConfig.yaml
+  413  cat mongod-repl-1.conf
+  414  cat mongod-repl-2.conf
+  415  cat mongod-repl-3.conf
+  416  cat mongod-repl-4.conf
+  417  cat mongod-repl-5.conf
+  418  cat mongod-repl-6.conf
+  419  cat mongos.conf
+  420  ls
+  421  cd data
+  422  ls
+  423  cd ..
+  424  cd first_mongod/
+  425  ls
+  426  cd ..
+  427  ls
+  428  history
+
